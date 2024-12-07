@@ -13,7 +13,6 @@
 using I32 = std::int32_t;
 using I64 = std::int64_t;
 using B32 = std::uint32_t;
-using I128 = __int128;
 
 #if 0                           // part 1
 
@@ -210,11 +209,11 @@ int main() {
   lines[guard_pos[0]][guard_pos[1]] = '.';
 
   auto get_key = [](I32 r, I32 c, I32 d) {
-    return (static_cast<I128>(r) << 16) | (static_cast<I128>(c) << 8) | static_cast<I128>(d);
+    return (static_cast<I64>(r) << 16) | (static_cast<I64>(c) << 8) | static_cast<I64>(d);
   };
 
   auto run_cycle_check = [&]() {
-    std::unordered_set<I128> visited;
+    std::unordered_set<I64> visited;
     I32 r = guard_pos[0];
     I32 c = guard_pos[1];
     I32 d = 0;
