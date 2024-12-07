@@ -218,9 +218,12 @@ int main() {
     I32 r = guard_pos[0];
     I32 c = guard_pos[1];
     I32 d = 0;
-    auto initial_key = get_key(r, c, d);
-    visited.insert(initial_key);
     while (true) {
+      auto key = get_key(r, c, d);
+      if (visited.count(key) != 0) {
+        return true;
+      }
+      visited.emplace(key);
       auto r2 = r + directions[d].first;
       auto c2 = c + directions[d].second;
       if (!(r2 >= 0 && r2 < rows && c2 >= 0 && c2 < cols)) { // out of bounds
@@ -229,11 +232,6 @@ int main() {
       if (lines[r2][c2] == '.') {
         r = r2;
         c = c2;
-        auto key = get_key(r, c, d);
-        if (visited.count(key) != 0) {
-          return true;
-        }
-        visited.emplace(key);
       } else {
         d = (d + 1) % 4;
       }
