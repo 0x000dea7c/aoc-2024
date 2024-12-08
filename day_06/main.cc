@@ -178,7 +178,7 @@ int main() {
 #else  // part 2
 
 int main() {
-  // fucking embarrasing piece of software, it takes 15 seconds
+  // fucking embarrasing piece of software, it takes ~6 seconds
   I32 constexpr rows = 130, cols = 130;
   std::vector<std::string> lines(rows, std::string(cols, 0));
   I32 count = 0;
@@ -209,11 +209,11 @@ int main() {
   lines[guard_pos[0]][guard_pos[1]] = '.';
 
   auto get_key = [](I32 r, I32 c, I32 d) {
-    return (static_cast<I64>(r) << 16) | (static_cast<I64>(c) << 8) | static_cast<I64>(d);
+    return (static_cast<I32>(r) << 16) | (static_cast<I32>(c) << 8) | static_cast<I32>(d);
   };
 
   auto run_cycle_check = [&]() {
-    std::unordered_set<I64> visited;
+    std::unordered_set<I32> visited;
     I32 r = guard_pos[0];
     I32 c = guard_pos[1];
     I32 d = 0;
