@@ -6,29 +6,22 @@
 #include <unordered_set>
 #include <chrono>
 
-inline static int
-get_key (int r, int c)
-{
-  return (r << 8) | c;
-}
-
 static int
-dfs (int r, int c, std::vector<std::vector<int>> const &lines, int prev, std::unordered_set<int> &visited)
+dfs (int r, int c, std::vector<std::vector<int>> const &lines, int prev)
 {
-  visited.emplace (get_key (r, c));
   if (lines[r][c] - prev <= 1)
     {
       if (prev == 8 && lines[r][c] == 9)
         return 1;
       int count = 0;
-      if (r - 1 >= 0 && visited.count (get_key (r - 1, c)) == 0 && (lines[r - 1][c] - lines[r][c]) == 1)
-        count += dfs (r - 1, c, lines, lines[r][c], visited);
-      if (c + 1 < lines[0].size () && visited.count (get_key (r, c + 1)) == 0 && (lines[r][c + 1] - lines[r][c]) == 1)
-        count += dfs (r, c + 1, lines, lines[r][c], visited);
-      if (c - 1 >= 0 && visited.count (get_key (r, c - 1)) == 0 && (lines[r][c - 1] - lines[r][c]) == 1)
-        count += dfs (r, c - 1, lines, lines[r][c], visited);
-      if (r + 1 < lines.size () && visited.count (get_key (r + 1, c)) == 0 && (lines[r + 1][c] - lines[r][c]) == 1)
-        count += dfs (r + 1, c, lines, lines[r][c], visited);
+      if (r - 1 >= 0 && (lines[r - 1][c] - lines[r][c]) == 1)
+        count += dfs (r - 1, c, lines, lines[r][c]);
+      if (c + 1 < lines[0].size () && (lines[r][c + 1] - lines[r][c]) == 1)
+        count += dfs (r, c + 1, lines, lines[r][c]);
+      if (c - 1 >= 0 && (lines[r][c - 1] - lines[r][c]) == 1)
+        count += dfs (r, c - 1, lines, lines[r][c]);
+      if (r + 1 < lines.size () && (lines[r + 1][c] - lines[r][c]) == 1)
+        count += dfs (r + 1, c, lines, lines[r][c]);
       return count;
     }
   return 0;
@@ -38,6 +31,7 @@ int
 main ()
 {
   // part1: 266'933ns
+  // part2: 75'981ns
   std::vector<std::pair<int, int>> starting_pts;
   std::vector<std::vector<int>> lines;
   auto start = std::chrono::high_resolution_clock::now ();
@@ -62,8 +56,7 @@ main ()
   int scores = 0;
   for (auto const &[r, c] : starting_pts)
     {
-      std::unordered_set<int> visited;
-      int score = dfs (r, c, lines, lines[r][c], visited);
+      int score = dfs (r, c, lines, lines[r][c]);
       scores += score;
     }
   auto end = std::chrono::high_resolution_clock::now ();
